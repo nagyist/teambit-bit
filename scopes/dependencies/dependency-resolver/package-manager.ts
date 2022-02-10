@@ -54,7 +54,7 @@ export interface PackageManager {
     rootDir: string,
     rootPolicy: WorkspacePolicy,
     componentDirectoryMap: ComponentMap<string>,
-    options?: PackageManagerInstallOptions
+    options: PackageManagerInstallOptions
   ): Promise<void>;
 
   resolveRemoteVersion(
@@ -69,7 +69,7 @@ export interface PackageManager {
     options: PackageManagerGetPeerDependencyIssuesOptions
   ): Promise<PeerDependencyIssuesByProjects>;
 
-  getInjectedDirs?(rootDir: string, componentDir: string): Promise<string[]>;
+  getInjectedDirs?(rootDir: string, componentDir: string, packageName: string): Promise<string[]>;
 
   getRegistries?(): Promise<Registries>;
 
