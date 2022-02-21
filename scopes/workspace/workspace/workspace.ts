@@ -1708,8 +1708,16 @@ needed-for: ${neededFor?.toString() || '<unknown>'}`);
     const depsFilterFn = await this.generateFilterFnForDepsFromLocalRemote();
 
     const rootComponentIds = [
-      ...this.dependencyResolver.getRootComponentsByType('envs'),
-      ...this.dependencyResolver.getRootComponentsByType('apps'),
+      ...(
+        this.dependencyResolver.config.rootComponentTypes?.envs
+        ? this.dependencyResolver.getRootComponentsByType('envs')
+        : []
+      ),
+      ...(
+        this.dependencyResolver.config.rootComponentTypes?.apps
+        ? this.dependencyResolver.getRootComponentsByType('apps')
+        : []
+      ),
     ].filter(id => compDirMap.hashMap.has(id)).map((id) => new ComponentID(BitId.parse(id)))
     const rootComponents = await this.getMany(rootComponentIds)
 
