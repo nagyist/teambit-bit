@@ -462,7 +462,6 @@ export class DependencyResolverMain {
     const concreteOpts = {
       ...defaultCreateFromComponentsOptions,
       ...options,
-      hasRootComponents: Boolean(this.config.rootComponentTypes && (this.config.rootComponentTypes.envs || this.config.rootComponentTypes.apps)),
     };
     const workspaceManifestFactory = new WorkspaceManifestFactory(this);
     const res = await workspaceManifestFactory.createFromComponents(
@@ -847,7 +846,7 @@ export class DependencyResolverMain {
 
   getRootComponentsByType(rootComponentType: RootComponentType) {
     const rootComponents = this.rootComponentsSlot.toArray().find(([id, rootComponents]) => rootComponents.type === rootComponentType)
-    if (!rootComponents) return []
+    if (!rootComponents?.[1]) return []
     return rootComponents[1].getIds()
   }
 

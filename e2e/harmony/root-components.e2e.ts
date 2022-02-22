@@ -17,14 +17,15 @@ describe('root components', function () {
       helper = new Helper();
       helper.scopeHelper.reInitLocalScopeHarmony();
       helper.fixtures.populateComponents(4);
-      helper.extensions.bitJsonc.addKeyValToDependencyResolver('rootComponents', [
-        '@my-scope/comp3',
-        '@my-scope/comp4',
-      ]);
-      helper.fs.outputFile(`comp1/index.js`, `const React = require("react")`);
+      helper.extensions.bitJsonc.addKeyValToDependencyResolver('rootComponentTypes', {
+        apps: true,
+      });
+      helper.bitJsonc.addKeyVal(undefined, 'my-scope/comp1', {})
+      helper.bitJsonc.addKeyVal(undefined, 'my-scope/comp2', {})
+      helper.fs.outputFile(`comp1/comp1.node-app.js`, `const React = require("react"); module.exports.default = { name: 'comp1' }`);
       helper.fs.outputFile(
-        `comp2/index.js`,
-        `const React = require("react");const comp1 = require("@my-scope/comp1");`
+        `comp2/index.node-app.js`,
+        `const React = require("react");const comp1 = require("@my-scope/comp1"); module.exports.default = { name: 'comp2' }`
       );
       helper.fs.outputFile(
         `comp3/index.js`,
@@ -35,6 +36,7 @@ describe('root components', function () {
         `const React = require("react");const comp2 = require("@my-scope/comp2");`
       );
       helper.extensions.addExtensionToVariant('comp1', 'teambit.dependencies/dependency-resolver', {
+        'teambit.harmony/aspect': {},
         policy: {
           peerDependencies: {
             react: '16 || 17',
@@ -42,6 +44,7 @@ describe('root components', function () {
         },
       });
       helper.extensions.addExtensionToVariant('comp2', 'teambit.dependencies/dependency-resolver', {
+        'teambit.harmony/aspect': {},
         policy: {
           peerDependencies: {
             react: '16 || 17',
@@ -62,6 +65,11 @@ describe('root components', function () {
           },
         },
       });
+      helper.bitJsonc.addKeyValToDependencyResolver('policy', {
+        dependencies: {
+          react: '17',
+        },
+      })
       helper.command.install();
       virtualStoreDir = path.join(helper.fixtures.scopes.localPath, 'node_modules/.pnpm');
       numberOfFilesInVirtualStore = fs.readdirSync(virtualStoreDir).length;
@@ -312,10 +320,9 @@ describe('root components', function () {
       helper.scopeHelper.reInitLocalScopeHarmony();
       helper.fixtures.populateComponents(4);
       helper.extensions.bitJsonc.addKeyValToDependencyResolver('nodeLinker', 'hoisted');
-      helper.extensions.bitJsonc.addKeyValToDependencyResolver('rootComponents', [
-        '@my-scope/comp3',
-        '@my-scope/comp4',
-      ]);
+      helper.extensions.bitJsonc.addKeyValToDependencyResolver('rootComponentTypes', {
+        apps: true,
+      });
       helper.fs.outputFile(`comp1/index.js`, `const React = require("react")`);
       helper.fs.outputFile(
         `comp2/index.js`,
